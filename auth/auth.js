@@ -107,5 +107,6 @@ exports.isLoggedIn = (req, res, next) => {
 };
 
 exports.createToken = (payload) => {
-  return jwt.sign(payload, secret, { expiresIn: "1d" });
+  return jwt.sign(payload, secret);
+  // return jwt.sign(payload, secret, { expiresIn: "1d" });
 };
