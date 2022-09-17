@@ -19,8 +19,9 @@ const tripSchema = mongoose.Schema({
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
   },
-  driverUsername: {
-    type: String,
+  driver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
   pickupLocation: {
     type: String,
@@ -57,6 +58,10 @@ const tripSchema = mongoose.Schema({
   },
   notes: {
     type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

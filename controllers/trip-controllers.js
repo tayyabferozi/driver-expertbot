@@ -1,7 +1,29 @@
 const Trip = require("../models/trip-model");
 
 exports.getAllTrips = (req, res) => {
-  Trip.find()
+  const { status, constraint } = req.query;
+
+  let options = {};
+
+  if (status) {
+    options.tripStatus = status;
+  }
+  if (constraint) {
+    if (constraint === "day") {
+      options.createdAt = { $gte: Date.now() - 60 * 60 * 24 * 1000 };
+    }
+    if (constraint === "week") {
+      options.createdAt = { $gte: Date.now() - 7 * 60 * 60 * 24 * 1000 };
+    }
+    if (constraint === "month") {
+      options.createdAt = { $gte: Date.now() - 30 * 60 * 60 * 24 * 1000 };
+    }
+  }
+  if (req?.user?.userType === "driver") {
+    options.driver = req.user._id;
+  }
+
+  Trip.find(options)
     .then((foundTrips) => {
       res.json({ success: true, trips: foundTrips });
     })
@@ -36,7 +58,7 @@ exports.createTrip = (req, res) => {
     hour,
     minutes,
     customerId,
-    driverUsername,
+    driver,
     pickupLocation,
     dropoffLocation,
     expectedPickupTime1,
@@ -58,7 +80,7 @@ exports.createTrip = (req, res) => {
     hour,
     minutes,
     customerId,
-    driverUsername,
+    driver,
     pickupLocation,
     dropoffLocation,
     expectedPickupTime1,
@@ -98,7 +120,7 @@ exports.updateTrip = (req, res) => {
     hour,
     minutes,
     customerId,
-    driverUsername,
+    driver,
     pickupLocation,
     dropoffLocation,
     expectedPickupTime1,
@@ -127,7 +149,7 @@ exports.updateTrip = (req, res) => {
       foundTrip.hour = hour;
       foundTrip.minutes = minutes;
       foundTrip.customerId = customerId;
-      foundTrip.driverUsername = driverUsername;
+      foundTrip.driver = driver;
       foundTrip.pickupLocation = pickupLocation;
       foundTrip.dropoffLocation = dropoffLocation;
       foundTrip.expectedPickupTime1 = expectedPickupTime1;

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const { ensureAuthenticated } = require("../auth/auth");
+const { ensureAuthenticated, extractAuthentication } = require("../auth/auth");
 const {
   createTrip,
   getAllTrips,
